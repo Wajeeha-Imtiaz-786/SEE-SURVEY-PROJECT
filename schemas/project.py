@@ -1,19 +1,22 @@
 from pydantic import BaseModel
+from datetime import datetime
 from typing import Optional
 
 class ProjectBase(BaseModel):
     project_name: str
-    description: Optional[str] = None
+    mu: Optional[str] = None
+    ct: Optional[str] = None
 
 class ProjectCreate(ProjectBase):
+    user_id: int
+
+class ProjectUpdate(ProjectBase):
     pass
 
-class ProjectUpdate(BaseModel):
-    project_name: Optional[str] = None
-    description: Optional[str] = None
-
-class ProjectResponse(ProjectBase):
+class ProjectOut(ProjectBase):
     project_id: int
+    user_id: int
+    created_at: datetime
 
     class Config:
-        from_attributes = True  # Updated for Pydantic v2
+        orm_mode = True

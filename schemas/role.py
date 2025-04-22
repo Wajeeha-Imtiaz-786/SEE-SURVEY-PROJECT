@@ -1,19 +1,39 @@
 from pydantic import BaseModel
-from typing import Optional
+from enum import Enum as PyEnum
 
+# Enum class for roles
+class UserRoleEnum(str, PyEnum):
+    Admin = "Admin"
+    Manager = "Manager"
+    Engineer = "Engineer"
+    Viewer = "Viewer"
+
+# Shared base schema
 class RoleBase(BaseModel):
-    role_name: str
-    description: Optional[str] = None
+    project_id: int
+    user_id: int
+    user_role: UserRoleEnum
 
+# For creating a role
 class RoleCreate(RoleBase):
     pass
 
+# For updating a role
 class RoleUpdate(BaseModel):
-    role_name: Optional[str] = None
-    description: Optional[str] = None
+    project_id: int | None = None
+    user_id: int | None = None
+    user_role: UserRoleEnum | None = None
 
-class RoleResponse(RoleBase):
+# For returning a role (includes ID)
+from pydantic import BaseModel
+
+class RoleOut(BaseModel):
     role_id: int
+    project_id: int
+    user_id: int
+    user_role: str
 
     class Config:
-        from_attributes = True  # Updated for Pydantic v2
+        from_attributes = True  # for SQLAlchemy ORM
+
+    

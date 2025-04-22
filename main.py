@@ -6,6 +6,7 @@ from database import Base, engine
 from routers import user, project, role
 from routers import site_location, survey_visit, site_information, site_access
 
+
 # Initialize FastAPI
 app = FastAPI(
     title="Site Survey Backend",
