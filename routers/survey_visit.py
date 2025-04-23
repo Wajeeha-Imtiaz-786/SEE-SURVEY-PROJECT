@@ -18,6 +18,13 @@ def get_visit(visit_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Survey visit not found")
     return visit
 
+@router.get("/survey-visit/{site_session_id}", response_model=List[SurveyVisitSchema])
+def get_visits_by_site_session(site_session_id: int, db: Session = Depends(get_db)):
+    visits = db.query(SurveyVisit).filter(SurveyVisit.site_session_id == site_session_id).all()
+    if not visits:
+        raise HTTPException(status_code=404, detail="No survey visits found for this site session ID")
+    return visits
+
 @router.post("/", response_model=SurveyVisitSchema)
 def create_visit(visit: SurveyVisitCreate, db: Session = Depends(get_db)):
     new_visit = SurveyVisit(**visit.dict())

@@ -1,10 +1,12 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, JSON
 from database import Base
+from sqlalchemy.orm import relationship
 
 class SiteInformation(Base):
     __tablename__ = "site_information"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    site_session_id = Column(Integer, ForeignKey("site_session.id"))  # NEW
     site_location_id = Column(Integer, ForeignKey("site_location.id"))
     site_area = Column(String(255), nullable=False)
     site_ownership = Column(String(255), nullable=False)
@@ -18,3 +20,5 @@ class SiteInformation(Base):
     existing_rack_location = Column(JSON(String(255)))
     planned_rack_location = Column(JSON(String(255)))
     existing_technology = Column(JSON(String(255)))
+    site_session_id = Column(Integer, ForeignKey("site_session.id"))
+    site_session = relationship("SiteSession", back_populates="site_information")

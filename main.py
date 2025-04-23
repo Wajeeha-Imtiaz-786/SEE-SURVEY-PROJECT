@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from database import Base, engine
 from routers import user, project, role
 from routers import site_location, survey_visit, site_information, site_access
+from routers import site_session
 
 
 # Initialize FastAPI
@@ -53,3 +54,4 @@ app.include_router(site_location.router, prefix="/site-location", tags=["Site Lo
 app.include_router(survey_visit.router, prefix="/survey-visit", tags=["Survey Visit"])
 app.include_router(site_information.router, prefix="/site-information", tags=["Site Information"])
 app.include_router(site_access.router, prefix="/site-access", tags=["Site Access"])
+app.include_router(site_session.router)

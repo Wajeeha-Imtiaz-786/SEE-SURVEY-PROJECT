@@ -15,8 +15,23 @@ class SiteLocationBase(BaseModel):
 class SiteLocationCreate(SiteLocationBase):
     pass
 
+class SiteLocationUpdate(BaseModel):
+    site_id: Optional[str] = None
+    site_name: Optional[str] = None
+    region: Optional[str] = None
+    city: Optional[str] = None
+    longitude: Optional[Decimal] = None
+    latitude: Optional[Decimal] = None
+    site_elevation: Optional[Decimal] = None
+    address: Optional[str] = None
+
 class SiteLocationOut(SiteLocationBase):
     id: int
 
     class Config:
         from_attributes = True
+
+class SiteLocation(BaseModel):
+    latitude: float
+    longitude: float
+    address: str
