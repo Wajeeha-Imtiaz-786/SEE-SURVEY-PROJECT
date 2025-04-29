@@ -12,6 +12,11 @@ DB_PORT = int(os.getenv("DB_PORT", 3306))  # Default to 3306 for MySQL
 DB_NAME = os.getenv("DB_NAME", "see_survey_db")
 
 DATABASE_URL = f"mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+# Debugging: Print the database connection details
+print(f"DB_PORT: {DB_PORT}")
+print(f"DATABASE_URL: {DATABASE_URL}")
+
 # Create engine and session
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
