@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -31,12 +32,10 @@ def get_signup_page():
 @app.get("/", tags=["Health Check"])
 def read_root():
     """Health check endpoint to verify the API is running."""
-    return {"message": "Site Survey API is running!"}
+    return {"message": "Welcome to the Site Survey Backend!"}
 
 # CORS configuration
-origins = [
-    "http://localhost:3000",  # Adjust to match your frontend port or domain
-]
+origins = os.getenv("CORS_ORIGINS", "*").split(",")
 
 app.add_middleware(
     CORSMiddleware,

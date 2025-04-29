@@ -1,12 +1,13 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# Define the database connection
-DB_USERNAME = "survey_user"  # Change to your MySQL username
-DB_PASSWORD = "Islamabad123#"  # Change to your MySQL password
-DB_HOST = "localhost"  # Change if using a remote server
-DB_NAME = "see_survey_db"
+# Update database credentials to use environment variables
+DB_USERNAME = os.getenv("DB_USERNAME", "survey_user")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "Islamabad123#")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_NAME = os.getenv("DB_NAME", "see_survey_db")
 
 DATABASE_URL = f"mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
 
