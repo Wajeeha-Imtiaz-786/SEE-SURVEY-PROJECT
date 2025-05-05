@@ -8,12 +8,12 @@ class PowerMeter(Base):
     id = Column(Integer, primary_key=True, index=True)
     site_session_id = Column(Integer, ForeignKey("site_session.id"))
 
-    power_meter_serial_number = Column(String)
+    power_meter_serial_number = Column(String(255))
     power_meter_reading = Column(Float)
-    ac_power_source = Column(String)
+    ac_power_source = Column(String(255))
     length_power_cable_to_meter_m = Column(Float)
     cross_section_power_cable_to_meter_mm2 = Column(Float)
     main_cb_rating_amp = Column(Float)
-    main_cb_type = Column(String)
+    main_cb_type = Column(String(255))
 
     site_session = relationship("SiteSession", back_populates="power_meter")
