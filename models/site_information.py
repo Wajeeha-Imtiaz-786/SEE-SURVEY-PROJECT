@@ -20,5 +20,4 @@ class SiteInformation(Base):
     existing_rack_location = Column(JSON(String(255)))
     planned_rack_location = Column(JSON(String(255)))
     existing_technology = Column(JSON(String(255)))
-    site_session_id = Column(Integer, ForeignKey("site_session.id"))
     site_session = relationship("SiteSession", back_populates="site_information")

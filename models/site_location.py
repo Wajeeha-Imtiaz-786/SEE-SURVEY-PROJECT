@@ -15,5 +15,4 @@ class SiteLocation(Base):
     latitude = Column(DECIMAL(10,6), nullable=False)
     site_elevation = Column(DECIMAL(6,2))
     address = Column(String(255), nullable=False)
-    site_session_id = Column(Integer, ForeignKey("site_session.id"))
     site_session = relationship("SiteSession", back_populates="site_location")

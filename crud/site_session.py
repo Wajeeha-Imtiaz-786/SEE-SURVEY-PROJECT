@@ -3,10 +3,10 @@ from models.site_session import SiteSession
 from models.site_location import SiteLocation
 from models.site_information import SiteInformation
 from models.site_access import SiteAccess
-import schemas.site_session as schemas
+from schemas.site_session import SiteSessionCreate
 
 
-def create_site_session(db: Session, site_session: schemas.SiteSessionCreate):
+def create_site_session(db: Session, site_session: SiteSessionCreate):
     db_site_session = SiteSession(**site_session.dict())
     db.add(db_site_session)
     db.commit()

@@ -12,3 +12,6 @@ class SiteSession(Base):
     site_location = relationship("SiteLocation", back_populates="site_session", uselist=False)
     site_access = relationship("SiteAccess", back_populates="site_session", uselist=False)
     site_information = relationship("SiteInformation", back_populates="site_session", uselist=False)
+    ac_connection_info = relationship("ACConnectionInfo", back_populates="site_session", cascade="all, delete")
+    power_meter = relationship("PowerMeter", back_populates="site_session", cascade="all, delete")
+    ac_panel = relationship("ACPanel", back_populates="site_session", cascade="all, delete")

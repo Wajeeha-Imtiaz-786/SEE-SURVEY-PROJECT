@@ -23,5 +23,4 @@ class SiteAccess(Base):
     stair_lift_height = Column(DECIMAL(6,2))
     stair_lift_width = Column(DECIMAL(6,2))
     stair_lift_depth = Column(DECIMAL(6,2))
-    site_session_id = Column(Integer, ForeignKey("site_session.id"))
     site_session = relationship("SiteSession", back_populates="site_access")

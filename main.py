@@ -8,6 +8,14 @@ from routers import user, project, role
 from routers import site_location, survey_visit, site_information, site_access
 from routers import site_session
 
+from fastapi import FastAPI
+from routers import (
+    ac_connection_info,
+    power_meter,
+    ac_panel,
+    ac_panel_cb_load
+)
+
 
 # Initialize FastAPI
 app = FastAPI(
@@ -54,3 +62,9 @@ app.include_router(survey_visit.router, prefix="/survey-visit", tags=["Survey Vi
 app.include_router(site_information.router, prefix="/site-information", tags=["Site Information"])
 app.include_router(site_access.router, prefix="/site-access", tags=["Site Access"])
 app.include_router(site_session.router)
+
+# Include routers
+app.include_router(ac_connection_info.router)
+app.include_router(power_meter.router)
+app.include_router(ac_panel.router)
+app.include_router(ac_panel_cb_load.router)
