@@ -6,7 +6,7 @@ class PowerMeter(Base):
     __tablename__ = "power_meter"
 
     id = Column(Integer, primary_key=True, index=True)
-    site_session_id = Column(Integer, ForeignKey("site_session.id"))
+    #site_session_id = Column(Integer, ForeignKey("site_session.id"))
 
     power_meter_serial_number = Column(String(255))
     power_meter_reading = Column(Float)
@@ -16,4 +16,4 @@ class PowerMeter(Base):
     main_cb_rating_amp = Column(Float)
     main_cb_type = Column(String(255))
 
-    site_session = relationship("SiteSession", back_populates="power_meter")
+    #site_session = relationship("SiteSession", back_populates="power_meter")
