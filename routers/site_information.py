@@ -5,7 +5,7 @@ from models.site_information import SiteInformation
 from schemas.site_information import SiteInformationCreate, SiteInformationUpdate, SiteInformationOut
 from typing import List
 
-router = APIRouter(prefix="/site-information", tags=["Site Information"])
+router = APIRouter( tags=["Site Information"])
 
 @router.get("/", response_model=List[SiteInformationOut])
 def get_all_site_info(db: Session = Depends(get_db)):

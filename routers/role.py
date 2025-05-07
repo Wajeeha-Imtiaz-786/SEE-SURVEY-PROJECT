@@ -8,7 +8,7 @@ from schemas.role import RoleCreate, RoleUpdate, RoleOut
 from crud import role as role_crud  # alias to avoid name conflict
 
 router = APIRouter(
-    prefix="/roles",
+    
     tags=["Roles"]
 )
 

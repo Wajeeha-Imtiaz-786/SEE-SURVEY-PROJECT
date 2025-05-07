@@ -4,7 +4,7 @@ from crud import crud_power_meter
 from schemas.power_meter import PowerMeterCreate, PowerMeterOut
 from database import get_db
 
-router = APIRouter(prefix="/power-meter", tags=["Power Meter"])
+router = APIRouter( tags=["Power Meter"])
 
 @router.post("/", response_model=PowerMeterOut)
 def create_power_meter(meter: PowerMeterCreate, db: Session = Depends(get_db)):

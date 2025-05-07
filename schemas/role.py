@@ -34,6 +34,6 @@ class RoleOut(BaseModel):
     user_role: str
 
     class Config:
-        from_attributes = True  # for SQLAlchemy ORM
+        from_attributes = True  # Updated from 'orm_mode'
+        validate_by_name = True  # Updated from 'allow_population_by_field_name'
 
-    

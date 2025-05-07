@@ -4,7 +4,7 @@ from crud import crud_ac_connection_info
 from schemas.ac_connection_info import ACConnectionInfoCreate, ACConnectionInfoOut
 from database import get_db
 
-router = APIRouter(prefix="/ac-connection-info", tags=["AC Connection Info"])
+router = APIRouter( tags=["AC Connection Info"])
 
 @router.post("/", response_model=ACConnectionInfoOut)
 def create_ac_connection_info(info: ACConnectionInfoCreate, db: Session = Depends(get_db)):

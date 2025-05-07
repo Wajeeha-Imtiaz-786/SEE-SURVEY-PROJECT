@@ -18,4 +18,5 @@ class ACConnectionInfoOut(ACConnectionInfoBase):
     site_session_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Updated from 'orm_mode'
+        validate_by_name = True  # Updated from 'allow_population_by_field_name'

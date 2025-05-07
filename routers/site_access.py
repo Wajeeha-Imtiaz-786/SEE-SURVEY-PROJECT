@@ -4,7 +4,7 @@ from database import get_db
 from models.site_access import SiteAccess
 from schemas.site_access import SiteAccessCreate, SiteAccessBase
 
-router = APIRouter(prefix="/site-access", tags=["Site Access"])
+router = APIRouter( tags=["Site Access"])
 
 @router.get("/")
 def get_all_access_records(db: Session = Depends(get_db)):

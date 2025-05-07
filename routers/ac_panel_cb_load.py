@@ -5,7 +5,7 @@ from schemas.ac_panel_cb_load import ACPanelCBLoadCreate, ACPanelCBLoadOut
 from database import get_db
 from typing import List
 
-router = APIRouter(prefix="/cb-load", tags=["AC Panel CB Loads"])
+router = APIRouter( tags=["AC Panel CB Loads"])
 
 @router.post("/", response_model=ACPanelCBLoadOut)
 def create_cb_load(load: ACPanelCBLoadCreate, db: Session = Depends(get_db)):

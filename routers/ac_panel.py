@@ -4,7 +4,7 @@ from crud import crud_ac_panel
 from schemas.ac_panel import ACPanelCreate, ACPanelOut
 from database import get_db
 
-router = APIRouter(prefix="/ac-panel", tags=["AC Panel"])
+router = APIRouter( tags=["AC Panel"])
 
 @router.post("/", response_model=ACPanelOut)
 def create_ac_panel(panel: ACPanelCreate, db: Session = Depends(get_db)):
