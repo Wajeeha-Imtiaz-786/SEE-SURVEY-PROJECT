@@ -5,10 +5,10 @@ from sqlalchemy.orm import relationship
 class SiteAccess(Base):
     __tablename__ = "site_access"
 
-    id = Column(Integer, ForeignKey("site_location.id"), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     
     #site_session_id = Column(Integer, ForeignKey("site_session.id"))  # NEW
-    #site_location_id = Column(Integer, ForeignKey("site_location.id"))
+    site_location_id = Column(Integer, ForeignKey("site_location.site_id"))
     access_permission = Column(Boolean)
     crane_access_time = Column(JSON(String(255)))
     site_access_contact = Column(String(255))

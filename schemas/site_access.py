@@ -2,8 +2,8 @@ from pydantic import BaseModel
 from typing import Optional
 
 class SiteAccessBase(BaseModel):
-    site_session_id: int  # NEW
-    site_location_id: Optional[int] = None
+    #site_session_id: int  # NEW
+    site_location_id: int # Foreign key to SiteLocation
     access_permission: Optional[bool] = None
     crane_access_time: Optional[dict] = None
     site_access_contact: Optional[str] = None
