@@ -6,7 +6,7 @@ from database import get_db
 from typing import List
 
 router = APIRouter(
-    prefix="/projects"
+    tags=["Projects"]
 )
 
 @router.post("/", response_model=schema_project.ProjectOut)

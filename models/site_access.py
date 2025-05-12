@@ -6,8 +6,9 @@ class SiteAccess(Base):
     __tablename__ = "site_access"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    site_session_id = Column(Integer, ForeignKey("site_session.id"))  # NEW
-    site_location_id = Column(Integer, ForeignKey("site_location.id"))
+    
+    #site_session_id = Column(Integer, ForeignKey("site_session.id"))  # NEW
+    site_location_id = Column(Integer, ForeignKey("site_location.site_id"))
     access_permission = Column(Boolean)
     crane_access_time = Column(JSON(String(255)))
     site_access_contact = Column(String(255))
@@ -23,4 +24,4 @@ class SiteAccess(Base):
     stair_lift_height = Column(DECIMAL(6,2))
     stair_lift_width = Column(DECIMAL(6,2))
     stair_lift_depth = Column(DECIMAL(6,2))
-    site_session = relationship("SiteSession", back_populates="site_access")
+    #site_session = relationship("SiteSession", back_populates="site_access")

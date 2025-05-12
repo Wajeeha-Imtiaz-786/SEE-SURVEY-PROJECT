@@ -17,7 +17,7 @@ from schemas.power_meter import (
 )
 from schemas.ac_panel import ACPanelCreate, ACPanelResponse
 
-router = APIRouter(prefix="/cb-load", tags=["AC Panel CB Loads"])
+router = APIRouter( tags=["AC Panel CB Loads"])
 
 @router.post("/ac-panel-cb-load/", response_model=ACPanelsCBLoadResponse)
 def create_cb_load(data: ACPanelsCBLoadCreate, db: Session = Depends(get_db)):

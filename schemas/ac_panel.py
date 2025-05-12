@@ -33,6 +33,4 @@ class ACPanelOut(ACPanelBase):
     cbs_loads: List[ACPanelCBLoadOut] = []
 
     class Config:
-        from_attributes = True
-
-
+        orm_mode = True

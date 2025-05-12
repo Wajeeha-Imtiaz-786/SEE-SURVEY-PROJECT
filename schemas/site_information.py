@@ -12,8 +12,8 @@ class SiteInformationBase(BaseModel):
     site_topology: Optional[str] = None
     site_type: Optional[str] = None
     planned_scope: Optional[List[str]] = None
-    existing_rack_location: Optional[List[str]] = None
-    planned_rack_location: Optional[List[str]] = None
+    existing_rack_cabinets: Optional[List[str]] = None
+    planned_rack_cabinets: Optional[List[str]] = None
     existing_technology: Optional[List[str]] = None
 
 class SiteInformationCreate(SiteInformationBase):
@@ -29,8 +29,8 @@ class SiteInformationUpdate(BaseModel):
     site_topology: Optional[str] = None
     site_type: Optional[str] = None
     planned_scope: Optional[List[str]] = None
-    existing_rack_location: Optional[List[str]] = None
-    planned_rack_location: Optional[List[str]] = None
+    existing_rack_cabinets: Optional[List[str]] = None
+    planned_rack_cabinets: Optional[List[str]] = None
     existing_technology: Optional[List[str]] = None
 
 class SiteInformationOut(SiteInformationBase):

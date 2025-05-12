@@ -13,7 +13,7 @@ from schemas.ac_connection_info import (
 )
 from typing import List
 
-router = APIRouter(prefix="/ac-connection-info", tags=["AC Connection Info"])
+router = APIRouter( tags=["AC Connection Info"])
 
 @router.post("/", response_model=ACConnectionInfoResponse)
 def create_ac_connection_info(payload: ACConnectionInfoCreate, db: Session = Depends(get_db)):

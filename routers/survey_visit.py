@@ -5,7 +5,7 @@ from models.survey_visit import SurveyVisit
 from schemas.survey_visit import SurveyVisitCreate, SurveyVisitUpdate, SurveyVisit as SurveyVisitSchema
 from typing import List
 
-router = APIRouter(prefix="/survey-visit", tags=["Survey Visit"])
+router = APIRouter( tags=["Survey Visit"])
 
 @router.get("/", response_model=List[SurveyVisitSchema])
 def get_visits(db: Session = Depends(get_db)):

@@ -21,3 +21,10 @@ class PowerMeterResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+# Added PowerMeterOut class to represent the output model for power meters
+class PowerMeterOut(PowerMeterBase):
+    id: int
+
+    class Config:
+        from_attributes = True

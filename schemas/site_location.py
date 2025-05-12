@@ -7,6 +7,7 @@ class SiteLocationBase(BaseModel):
     site_name: str
     region: str
     city: str
+    operator: str
     longitude: Decimal
     latitude: Decimal
     site_elevation: Optional[Decimal] = None
@@ -20,6 +21,7 @@ class SiteLocationUpdate(BaseModel):
     site_name: Optional[str] = None
     region: Optional[str] = None
     city: Optional[str] = None
+    operator: Optional[str] = None
     longitude: Optional[Decimal] = None
     latitude: Optional[Decimal] = None
     site_elevation: Optional[Decimal] = None
@@ -35,3 +37,4 @@ class SiteLocation(BaseModel):
     latitude: float
     longitude: float
     address: str
+    operator: Optional[str] = None  # Added operator field

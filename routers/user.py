@@ -4,7 +4,7 @@ from database import get_db
 from schemas.user import UserCreate, UserResponse
 from crud.user import create_user, get_user_by_id, get_user_by_username, get_user_by_email
 
-router = APIRouter(prefix="/api", tags=["Users"])
+router = APIRouter( tags=["Users"])
 
 @router.post("/signup", response_model=UserResponse)
 def signup(user: UserCreate, db: Session = Depends(get_db)):

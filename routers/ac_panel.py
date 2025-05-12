@@ -9,13 +9,10 @@ from models.power_meter import PowerMeter
 from models.ac_panel import ACPanel
 
 router = APIRouter(prefix="/ac-panel", tags=["AC Panel"])
-@router.post("/ac-panel/", response_model=ACPanelResponse)
-def create_ac_panel(data: ACPanelCreate, db: Session = Depends(get_db)):
-    panel = ACPanel(**data.dict())
-    db.add(panel)
-    db.commit()
-    db.refresh(panel)
-    return panel
+
+@router.post("/", response_model=ACPanelOut)
+def create_ac_panel(panel: ACPanelCreate, db: Session = Depends(get_db)):
+    return panel.create_ac_panel(db, panel)
 
 @router.get("/ac-panel/{id}", response_model=ACPanelResponse)
 def get_ac_panel(id: int, db: Session = Depends(get_db)):

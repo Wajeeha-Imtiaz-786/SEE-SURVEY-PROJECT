@@ -9,8 +9,9 @@ from models.ac_connection_info import ACConnectionInfo
 from models.ac_panel import ACPanel
 from models.ac_panel_cb_load import ACPanelCBLoad
 from schemas.power_meter import (
-    PowerMeterCreate)
+    PowerMeterCreate, PowerMeterOut)
 from schemas.ac_connection_info import ACConnectionInfoCreate, ACConnectionInfoResponse
+import crud.crud_power_meter as crud_power_meter
 
 class ACConnectionInfoBase(BaseModel):
     ac_power_source: Optional[str]
@@ -73,6 +74,17 @@ def create_power_meter(data: PowerMeterCreate, db: Session = Depends(get_db)):
     db.add(meter)
     db.commit()
     db.refresh(meter)
+router = APIRouter( tags=["Power Meter"])
+
+@router.post("/", response_model=PowerMeterOut)
+def create_power_meter(meter: PowerMeterCreate, db: Session = Depends(get_db)):
+    return crud_power_meter.create_power_meter(db, meter)
+
+@router.get("/{session_id}", response_model=PowerMeterOut)
+def get_by_session(session_id: int, db: Session = Depends(get_db)):
+    meter = crud_power_meter.get_power_meter_by_session(db, session_id)
+    if not meter:
+        raise HTTPException(status_code=404, detail="Data not found")
     return meter
 
 @router.get("/power-meter/{id}", response_model=PowerMeterResponse)

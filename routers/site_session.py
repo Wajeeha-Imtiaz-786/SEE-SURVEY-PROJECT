@@ -5,7 +5,7 @@ import schemas.site_session as schemas
 import crud.site_session as crud
 
 router = APIRouter(
-    prefix="/site_session",
+    
     tags=["Site Session"]
 )
 
