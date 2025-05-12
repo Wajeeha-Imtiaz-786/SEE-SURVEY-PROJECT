@@ -10,12 +10,14 @@ class PowerMeterBase(BaseModel):
     main_cb_rating_amp: Optional[float]
     main_cb_type: Optional[str]
 
-class PowerMeterCreate(PowerMeterBase):
-    site_session_id: int
+class PowerMeterCreate(BaseModel):
+    name: str
+    description: str
 
-class PowerMeterOut(PowerMeterBase):
+class PowerMeterResponse(BaseModel):
     id: int
-    site_session_id: int
+    name: str
+    description: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True

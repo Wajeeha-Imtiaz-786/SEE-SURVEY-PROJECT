@@ -15,5 +15,6 @@ class ACPanel(Base):
     has_free_cbs = Column(String(255))
     free_space_to_add_new_cbs = Column(Integer)
 
+
     site_session = relationship("SiteSession", back_populates="ac_panel")
     cbs_loads = relationship("ACPanelCBLoad", back_populates="ac_panel", cascade="all, delete")

@@ -8,6 +8,10 @@ class SiteSessionBase(BaseModel):
 class SiteSessionCreate(SiteSessionBase):
     pass
 
+class SiteSessionUpdate(BaseModel):
+    session_code: Optional[str] = None
+    description: Optional[str] = None
+
 class SiteSession(SiteSessionBase):
     id: int
 
