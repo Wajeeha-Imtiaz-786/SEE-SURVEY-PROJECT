@@ -6,7 +6,7 @@ from fastapi.responses import FileResponse
 from database import Base, engine
 from routers import (
     user, project, role, site_location, survey_visit, site_information, site_access, site_session,
-    ac_connection_info, power_meter, ac_panel, ac_panel_cb_load
+    ac_connection_info, power_meter, ac_panel, ac_panel_cb_load, room
 )
 
 # Initialize FastAPI
@@ -58,3 +58,4 @@ app.include_router(ac_connection_info.router, prefix="/ac-connection-info", tags
 app.include_router(power_meter.router, prefix="/power-meter", tags=["Power Meter"])
 app.include_router(ac_panel.router, prefix="/ac-panel", tags=["AC Panel"])
 app.include_router(ac_panel_cb_load.router, prefix="/ac-panel-cb-load", tags=["AC Panel CB Load"])
+app.include_router(room.router)
