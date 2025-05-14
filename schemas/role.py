@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from enum import Enum as PyEnum
+from pydantic import BaseModel
 
 # Enum class for roles
 class UserRoleEnum(str, PyEnum):
@@ -25,7 +26,6 @@ class RoleUpdate(BaseModel):
     user_role: UserRoleEnum | None = None
 
 # For returning a role (includes ID)
-from pydantic import BaseModel
 
 class RoleOut(BaseModel):
     role_id: int
@@ -34,6 +34,6 @@ class RoleOut(BaseModel):
     user_role: str
 
     class Config:
-        from_attributes = True  # Updated from 'orm_mode'
-        validate_by_name = True  # Updated from 'allow_population_by_field_name'
+        from_attributes = True  # for SQLAlchemy ORM
 
+    

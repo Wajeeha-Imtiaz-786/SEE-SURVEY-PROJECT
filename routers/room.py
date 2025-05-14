@@ -1,16 +1,27 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+
 from database import get_db
 from crud.crud_room import (
     create_room_info, create_room_preparation, create_ran,
-    get_all_room_info, get_all_room_preparations, get_all_ran
+    create_transmission_mw, get_all_transmission_mw,
+    get_mw_links_by_transmission_id, get_all_room_info, get_all_room_preparations, get_all_ran,
+    update_transmission_mw, delete_transmission_mw,
+    update_mw_link, delete_mw_link
 )
-from schemas.room import RoomInfoCreate, RoomInfoOut, RoomPreparationCreate, RoomPreparationOut, RANCreate, RANOut
-from models.room import RoomInfo, RoomPreparation, RAN
+from schemas.room import (
+    RoomInfoCreate, RoomInfoOut,
+    RoomPreparationCreate, RoomPreparationOut,
+    RANCreate, RANOut,
+    TransmissionMWCreate, TransmissionMWOut,
+    MWLinkOut, MWLinkUpdate
+)
+from models.room import RoomInfo, RoomPreparation, RAN, TransmissionMW, MWLink
 
 router = APIRouter(prefix="/room", tags=["Room"])
 
+# ---------- RoomInfo ----------
 @router.post("/info", response_model=RoomInfoOut)
 def add_room_info(room_info: RoomInfoCreate, db: Session = Depends(get_db)):
     return create_room_info(db, room_info)
@@ -39,6 +50,8 @@ def delete_room_info(id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"detail": "RoomInfo deleted"}
 
+
+# ---------- RoomPreparation ----------
 @router.post("/preparation", response_model=RoomPreparationOut)
 def add_room_preparation(room_preparation: RoomPreparationCreate, db: Session = Depends(get_db)):
     return create_room_preparation(db, room_preparation)
@@ -67,6 +80,8 @@ def delete_room_preparation(id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"detail": "RoomPreparation deleted"}
 
+
+# ---------- RAN ----------
 @router.post("/ran", response_model=RANOut)
 def add_ran(ran: RANCreate, db: Session = Depends(get_db)):
     return create_ran(db, ran)
@@ -94,3 +109,35 @@ def delete_ran(id: int, db: Session = Depends(get_db)):
     db.delete(db_ran)
     db.commit()
     return {"detail": "RAN deleted"}
+
+
+# ---------- Transmission MW ----------
+@router.post("/transmission", response_model=TransmissionMWOut)
+def add_transmission_mw(transmission_mw: TransmissionMWCreate, db: Session = Depends(get_db)):
+    return create_transmission_mw(db, transmission_mw)
+
+@router.get("/transmission", response_model=List[TransmissionMWOut])
+def list_transmission_mw(db: Session = Depends(get_db)):
+    return get_all_transmission_mw(db)
+
+@router.put("/transmission/{id}", response_model=TransmissionMWOut)
+def update_transmission_mw_record(id: int, transmission_mw: TransmissionMWCreate, db: Session = Depends(get_db)):
+    return update_transmission_mw(db, id, transmission_mw)
+
+@router.delete("/transmission/{id}")
+def delete_transmission_mw_record(id: int, db: Session = Depends(get_db)):
+    return delete_transmission_mw(db, id)
+
+
+# ---------- MW Links ----------
+@router.get("/transmission/{transmission_id}/mw-links", response_model=List[MWLinkOut])
+def list_mw_links_for_transmission(transmission_id: int, db: Session = Depends(get_db)):
+    return get_mw_links_by_transmission_id(db, transmission_id)
+
+@router.put("/mw-link/{id}", response_model=MWLinkOut)
+def update_mw_link_record(id: int, mw_link: MWLinkUpdate, db: Session = Depends(get_db)):
+    return update_mw_link(db, id, mw_link)
+
+@router.delete("/mw-link/{id}")
+def delete_mw_link_record(id: int, db: Session = Depends(get_db)):
+    return delete_mw_link(db, id)

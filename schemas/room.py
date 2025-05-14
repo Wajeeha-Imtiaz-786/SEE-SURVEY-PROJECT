@@ -1,6 +1,8 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
+
+# ---------------- RoomInfo ----------------
 class RoomInfoBase(BaseModel):
     height: float
     width: float
@@ -17,6 +19,8 @@ class RoomInfoOut(RoomInfoBase):
     class Config:
         from_attributes = True
 
+
+# ---------------- RoomPreparation ----------------
 class RoomPreparationBase(BaseModel):
     air_condition_type: str
     air_condition_count: str
@@ -40,6 +44,8 @@ class RoomPreparationOut(RoomPreparationBase):
     class Config:
         from_attributes = True
 
+
+# ---------------- RAN ----------------
 class RANBase(BaseModel):
     equipment_vendor: str
     has_free_slots: bool
@@ -55,3 +61,64 @@ class RANOut(RANBase):
 
     class Config:
         from_attributes = True
+
+
+# ---------------- MW Link (Child Table) ----------------
+class MWLinkBase(BaseModel):
+    destination_site_id: str
+    mw_equipment_vendor: str  # radio button: Nokia / Ericson / Huawei / ZTE / Other
+    idu_type: str
+    card_type_model: str
+    mw_backhauling_type: str  # radio button: Ethernet / Fiber
+    ethernet_ports_used: int
+    ethernet_ports_free: int
+
+class MWLinkCreate(MWLinkBase):
+    pass
+
+class MWLinkOut(MWLinkBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+# ---------------- Transmission / MW ----------------
+class TransmissionMWBase(BaseModel):
+    type_of_transmission: str  # radio button: Fiber / MW / Not exist
+    transmission_equipment_vendor: List[str]  # checkboxes
+    cable_length_from_odf_to_baseband: float
+    odf_fiber_cable_type: str  # radio button: LC / SC / FC
+    free_ports_on_odf: int
+    mw_links_exist: int  # drop down: 1 to 10
+    space_available_for_mw_idu_installation: List[str]  # checkboxes
+
+class TransmissionMWCreate(TransmissionMWBase):
+    mw_links: List[MWLinkCreate] = []
+
+class TransmissionMWOut(TransmissionMWBase):
+    id: int
+    mw_links: List[MWLinkOut] = []
+
+    class Config:
+        from_attributes = True
+
+from pydantic import BaseModel
+from typing import Optional
+
+
+class MWLinkUpdate(BaseModel):
+    mw_type: Optional[str]
+    frequency_band: Optional[str]
+    channel_bandwidth: Optional[str]
+    hop_length: Optional[str]
+    tx_frequency: Optional[str]
+    rx_frequency: Optional[str]
+    tx_power: Optional[str]
+    rx_power: Optional[str]
+    antenna_size: Optional[str]
+    polarization: Optional[str]
+    transmission_mw_id: Optional[int]
+
+    class Config:
+        orm_mode = True
