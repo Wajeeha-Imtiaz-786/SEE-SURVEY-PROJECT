@@ -18,6 +18,12 @@ from schemas.room import (
     MWLinkOut, MWLinkUpdate
 )
 from models.room import RoomInfo, RoomPreparation, RAN, TransmissionMW, MWLink
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from database import get_db
+from schemas.room import DCPowerSystemCreate, DCPowerSystemOut
+from crud import crud_room
+
 
 router = APIRouter(prefix="/room", tags=["Room"])
 
@@ -141,3 +147,8 @@ def update_mw_link_record(id: int, mw_link: MWLinkUpdate, db: Session = Depends(
 @router.delete("/mw-link/{id}")
 def delete_mw_link_record(id: int, db: Session = Depends(get_db)):
     return delete_mw_link(db, id)
+
+
+@router.post("/", response_model=DCPowerSystemOut)
+def create_dc_power(data: DCPowerSystemCreate, db: Session = Depends(get_db)):
+    return crud_room.create_dc_power_system(db, data)

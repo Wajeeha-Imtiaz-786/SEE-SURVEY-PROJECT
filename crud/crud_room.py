@@ -5,6 +5,10 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from models.room import TransmissionMW, MWLink
 from schemas.room import TransmissionMWCreate, MWLinkUpdate
+from sqlalchemy.orm import Session
+from models.room import DCPowerSystem, BLVDCBLoad, LLVDCBLoad, PDUCBLoad
+from schemas.room import DCPowerSystemCreate
+
 
 # ---------------- RoomInfo ----------------
 def create_room_info(db: Session, room_info: RoomInfoCreate):
@@ -116,3 +120,40 @@ def delete_mw_link(db: Session, id: int):
     db.delete(db_link)
     db.commit()
     return {"detail": "MWLink deleted"}
+
+# ---------------- DC Power System ----------------
+def create_dc_power_system(db: Session, data: DCPowerSystemCreate):
+    dc = DCPowerSystem(
+        site_session_id=data.site_session_id,
+        existing_dc_equipment_vendor=data.existing_dc_equipment_vendor,
+        existing_dc_power_rack=data.existing_dc_power_rack,
+        existing_rectifier_modules=data.existing_rectifier_modules,
+        rectifier_module_model=data.rectifier_module_model,
+        rectifier_module_capacity=data.rectifier_module_capacity,
+        free_slots_new_rectifier=data.free_slots_new_rectifier,
+        is_blvd_available=data.is_blvd_available,
+        blvd_has_free_cbs=data.blvd_has_free_cbs,
+        is_llvd_available=data.is_llvd_available,
+        llvd_has_free_cbs=data.llvd_has_free_cbs,
+        is_pdu_available=data.is_pdu_available,
+        pdu_has_free_cbs=data.pdu_has_free_cbs,
+        battery_strings=data.battery_strings,
+        battery_type=data.battery_type,
+        battery_vendor=data.battery_vendor,
+        total_battery_capacity=data.total_battery_capacity,
+    )
+    db.add(dc)
+    db.commit()
+    db.refresh(dc)
+
+    for cb in data.blvd_cb_loads:
+        db.add(BLVDCBLoad(dc_power_system_id=dc.id, label=cb.label, capacity=cb.capacity))
+
+    for cb in data.llvd_cb_loads:
+        db.add(LLVDCBLoad(dc_power_system_id=dc.id, label=cb.label, capacity=cb.capacity))
+
+    for cb in data.pdu_cb_loads:
+        db.add(PDUCBLoad(dc_power_system_id=dc.id, label=cb.label, capacity=cb.capacity))
+
+    db.commit()
+    return dc

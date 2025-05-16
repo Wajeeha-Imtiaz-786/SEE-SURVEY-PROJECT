@@ -122,3 +122,54 @@ class MWLinkUpdate(BaseModel):
 
     class Config:
         orm_mode = True
+# ---------------- DCPowerSystem ----------------
+
+class CBLoadBase(BaseModel):
+    label: str
+    capacity: str
+
+
+class BLVDCBLoadCreate(CBLoadBase):
+    pass
+
+
+class LLVDCBLoadCreate(CBLoadBase):
+    pass
+
+
+class PDUCBLoadCreate(CBLoadBase):
+    pass
+
+
+class DCPowerSystemBase(BaseModel):
+    existing_dc_equipment_vendor: str
+    existing_dc_power_rack: int
+    existing_rectifier_modules: int
+    rectifier_module_model: str
+    rectifier_module_capacity: int
+    free_slots_new_rectifier: int
+    is_blvd_available: str
+    blvd_has_free_cbs: str
+    is_llvd_available: str
+    llvd_has_free_cbs: str
+    is_pdu_available: str
+    pdu_has_free_cbs: str
+    battery_strings: int
+    battery_type: str
+    battery_vendor: str
+    total_battery_capacity: int
+
+    blvd_cb_loads: List[BLVDCBLoadCreate]
+    llvd_cb_loads: List[LLVDCBLoadCreate]
+    pdu_cb_loads: List[PDUCBLoadCreate]
+
+
+class DCPowerSystemCreate(DCPowerSystemBase):
+    site_session_id: int
+
+
+class DCPowerSystemOut(DCPowerSystemBase):
+    id: int
+
+    class Config:
+        orm_mode = True

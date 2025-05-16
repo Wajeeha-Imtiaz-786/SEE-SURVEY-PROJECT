@@ -6,7 +6,7 @@ class ACConnectionInfo(Base):
     __tablename__ = "ac_connection_info"
 
     id = Column(Integer, primary_key=True, index=True)
-    #site_session_id = Column(Integer, ForeignKey("site_session.id"))
+    site_session_id = Column(Integer, ForeignKey("site_session.id"))
 
     ac_power_source = Column(String(255))
     if_diesel_generator_exist_how_many = Column(Integer)
@@ -16,4 +16,4 @@ class ACConnectionInfo(Base):
     diesel_generator_2_operational_status = Column(String(255))
     solar_system_capacity_kw = Column(Float)
 
-    #site_session = relationship("SiteSession", back_populates="ac_connection_info")
+    site_session = relationship("SiteSession", back_populates="ac_connection_info")

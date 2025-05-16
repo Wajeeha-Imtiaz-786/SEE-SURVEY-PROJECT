@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from routers import health_safety
 from database import Base, engine
 from routers import (
     user, project, role, site_location, survey_visit, site_information, site_access, site_session,
@@ -59,3 +60,5 @@ app.include_router(power_meter.router, prefix="/power-meter", tags=["Power Meter
 app.include_router(ac_panel.router, prefix="/ac-panel", tags=["AC Panel"])
 app.include_router(ac_panel_cb_load.router, prefix="/ac-panel-cb-load", tags=["AC Panel CB Load"])
 app.include_router(room.router)
+
+app.include_router(health_safety.router)

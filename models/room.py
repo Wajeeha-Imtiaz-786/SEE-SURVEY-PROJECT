@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Table, Enum
 from sqlalchemy.orm import relationship
 from database import Base
-
 
 # ---------------- RoomInfo ----------------
 class RoomInfo(Base):
@@ -78,3 +77,67 @@ class MWLink(Base):
     ethernet_ports_free = Column(Integer, nullable=False)
 
     transmission_mw = relationship("TransmissionMW", back_populates="mw_links")
+
+
+# ---------------- DCPowerSystem ----------------
+
+class DCPowerSystem(Base):
+    __tablename__ = "dc_power_system"
+
+    id = Column(Integer, primary_key=True, index=True)
+    site_session_id = Column(Integer, ForeignKey("site_session.id"))
+
+    existing_dc_equipment_vendor = Column(Enum("Nokia", "Ericson", "Huawei", "ZTE", "Other"))
+    existing_dc_power_rack = Column(Integer)
+    existing_rectifier_modules = Column(Integer)
+    rectifier_module_model = Column(String(255))
+    rectifier_module_capacity = Column(Integer)
+    free_slots_new_rectifier = Column(Integer)
+    is_blvd_available = Column(Enum("Yes", "No"))
+    blvd_has_free_cbs = Column(Enum("Yes", "No"))
+    is_llvd_available = Column(Enum("Yes", "No"))
+    llvd_has_free_cbs = Column(Enum("Yes", "No"))
+    is_pdu_available = Column(Enum("Yes", "No"))
+    pdu_has_free_cbs = Column(Enum("Yes", "No"))
+    battery_strings = Column(Integer)
+    battery_type = Column(Enum("Lead acid", "Lithium"))
+    battery_vendor = Column(String(255))  # Comma-separated string
+    total_battery_capacity = Column(Integer)
+
+    # Relationships
+    blvd_cb_loads = relationship("BLVDCBLoad", back_populates="dc_power_system", cascade="all, delete")
+    llvd_cb_loads = relationship("LLVDCBLoad", back_populates="dc_power_system", cascade="all, delete")
+    pdu_cb_loads = relationship("PDUCBLoad", back_populates="dc_power_system", cascade="all, delete")
+
+
+class BLVDCBLoad(Base):
+    __tablename__ = "blvd_cb_load"
+
+    id = Column(Integer, primary_key=True, index=True)
+    dc_power_system_id = Column(Integer, ForeignKey("dc_power_system.id"))
+    label = Column(String(255))
+    capacity = Column(String(255))
+
+    dc_power_system = relationship("DCPowerSystem", back_populates="blvd_cb_loads")
+
+
+class LLVDCBLoad(Base):
+    __tablename__ = "llvd_cb_load"
+
+    id = Column(Integer, primary_key=True, index=True)
+    dc_power_system_id = Column(Integer, ForeignKey("dc_power_system.id"))
+    label = Column(String(255))
+    capacity = Column(String(255))
+
+    dc_power_system = relationship("DCPowerSystem", back_populates="llvd_cb_loads")
+
+
+class PDUCBLoad(Base):
+    __tablename__ = "pdu_cb_load"
+
+    id = Column(Integer, primary_key=True, index=True)
+    dc_power_system_id = Column(Integer, ForeignKey("dc_power_system.id"))
+    label = Column(String(255))
+    capacity = Column(String(255))
+
+    dc_power_system = relationship("DCPowerSystem", back_populates="pdu_cb_loads")
