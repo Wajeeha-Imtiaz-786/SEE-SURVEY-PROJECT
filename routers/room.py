@@ -3,27 +3,32 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from database import get_db
+from crud import crud_room
 from crud.crud_room import (
     create_room_info, create_room_preparation, create_ran,
     create_transmission_mw, get_all_transmission_mw,
     get_mw_links_by_transmission_id, get_all_room_info, get_all_room_preparations, get_all_ran,
     update_transmission_mw, delete_transmission_mw,
-    update_mw_link, delete_mw_link
+    update_mw_link, delete_mw_link,
+    create_dc_power_system, create_blvd_cb_load, get_blvd_cb_loads_by_dc_id,
+    update_blvd_cb_load, delete_blvd_cb_load,
+    create_llvd_cb_load, get_llvd_cb_loads_by_dc_id,
+    update_llvd_cb_load, delete_llvd_cb_load,
+    create_pdu_cb_load, get_pdu_cb_loads_by_dc_id,
+    update_pdu_cb_load, delete_pdu_cb_load
 )
 from schemas.room import (
     RoomInfoCreate, RoomInfoOut,
     RoomPreparationCreate, RoomPreparationOut,
     RANCreate, RANOut,
     TransmissionMWCreate, TransmissionMWOut,
-    MWLinkOut, MWLinkUpdate
+    MWLinkOut, MWLinkUpdate,
+    DCSystemCreate as DCPowerSystemCreate, DCSystem as DCPowerSystemOut,
+    BLVDCBLoadCreate, BLVDCBLoadOut,
+    LLVDCBLoadCreate, LLVDCBLoadOut,
+    PDUCBLoadCreate, PDUCBLoadOut
 )
-from models.room import RoomInfo, RoomPreparation, RAN, TransmissionMW, MWLink
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from database import get_db
-from schemas.room import DCPowerSystemCreate, DCPowerSystemOut
-from crud import crud_room
-
+from models.room import RoomInfo, RoomPreparation, RAN, BLVDCBLoad
 
 router = APIRouter(prefix="/room", tags=["Room"])
 
@@ -152,3 +157,55 @@ def delete_mw_link_record(id: int, db: Session = Depends(get_db)):
 @router.post("/", response_model=DCPowerSystemOut)
 def create_dc_power(data: DCPowerSystemCreate, db: Session = Depends(get_db)):
     return crud_room.create_dc_power_system(db, data)
+
+
+ #---------- PDU CB Load ----------
+@router.post("/dc-power/pdu", response_model=PDUCBLoadOut)
+def add_pdu_cb_load(data: PDUCBLoadCreate, db: Session = Depends(get_db)):
+    return create_pdu_cb_load(db, data)
+
+@router.get("/dc-power/pdu/{dc_power_system_id}", response_model=List[PDUCBLoadOut])
+def get_pdu_cb_loads(dc_power_system_id: int, db: Session = Depends(get_db)):
+    return get_pdu_cb_loads_by_dc_id(db, dc_power_system_id)
+
+@router.put("/dc-power/pdu/{id}", response_model=PDUCBLoadOut)
+def update_pdu_cb_load_endpoint(id: int, data: PDUCBLoadCreate, db: Session = Depends(get_db)):
+    return update_pdu_cb_load(db, id, data)
+
+@router.delete("/dc-power/pdu/{id}")
+def delete_pdu_cb_load_endpoint(id: int, db: Session = Depends(get_db)):
+    return delete_pdu_cb_load(db, id)
+
+# ---------- LLVD CB Load ----------
+@router.post("/dc-power/llvd", response_model=LLVDCBLoadOut)
+def add_llvd_cb_load(data: LLVDCBLoadCreate, db: Session = Depends(get_db)):
+    return create_llvd_cb_load(db, data)
+
+@router.get("/dc-power/llvd/{dc_power_system_id}", response_model=List[LLVDCBLoadOut])
+def get_llvd_cb_loads(dc_power_system_id: int, db: Session = Depends(get_db)):
+    return get_llvd_cb_loads_by_dc_id(db, dc_power_system_id)
+
+@router.put("/dc-power/llvd/{id}", response_model=LLVDCBLoadOut)
+def update_llvd_cb_load_endpoint(id: int, data: LLVDCBLoadCreate, db: Session = Depends(get_db)):
+    return update_llvd_cb_load(db, id, data)
+
+@router.delete("/dc-power/llvd/{id}")
+def delete_llvd_cb_load_endpoint(id: int, db: Session = Depends(get_db)):
+    return delete_llvd_cb_load(db, id)
+
+# ---------- BLVD CB Load ----------
+@router.post("/dc-power/blvd", response_model=BLVDCBLoadOut)
+def add_blvd_cb_load(data: BLVDCBLoadCreate, db: Session = Depends(get_db)):
+    return create_blvd_cb_load(db, data)
+
+@router.get("/dc-power/blvd/{dc_power_system_id}", response_model=List[BLVDCBLoadOut])
+def get_blvd_cb_loads(dc_power_system_id: int, db: Session = Depends(get_db)):
+    return get_blvd_cb_loads_by_dc_id(db, dc_power_system_id)
+
+@router.put("/dc-power/blvd/{id}", response_model=BLVDCBLoadOut)
+def update_blvd_cb_load_endpoint(id: int, data: BLVDCBLoadCreate, db: Session = Depends(get_db)):
+    return update_blvd_cb_load(db, id, data)
+
+@router.delete("/dc-power/blvd/{id}")
+def delete_blvd_cb_load_endpoint(id: int, db: Session = Depends(get_db)):
+    return delete_blvd_cb_load(db, id)

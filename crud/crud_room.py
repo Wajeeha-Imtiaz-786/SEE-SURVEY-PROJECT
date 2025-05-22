@@ -1,159 +1,300 @@
-from sqlalchemy.orm import Session
-from models.room import RoomInfo, RoomPreparation, RAN, TransmissionMW, MWLink
-from schemas.room import RoomInfoCreate, RoomPreparationCreate, RANCreate, TransmissionMWCreate, MWLinkCreate
-from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models.room import TransmissionMW, MWLink
-from schemas.room import TransmissionMWCreate, MWLinkUpdate
 from sqlalchemy.orm import Session
-from models.room import DCPowerSystem, BLVDCBLoad, LLVDCBLoad, PDUCBLoad
-from schemas.room import DCPowerSystemCreate
+from models.room import (
+    RoomInfo, RoomPreparation, RAN, TransmissionMW, MWLink,
+    DCPowerSystem, BLVDCBLoad, LLVDCBLoad, PDUCBLoad
+)
+from schemas.room import (
+    RoomInfoCreate, RoomInfoUpdate,
+    RoomPreparationCreate, RoomPreparationUpdate,
+    RANCreate, RANUpdate,
+    TransmissionMWCreate, TransmissionMWUpdate, MWLinkCreate, MWLinkUpdate,
+    DCSystemCreate, BLVDCBLoadCreate, LLVDCBLoadCreate, PDUCBLoadCreate
+)
 
 
 # ---------------- RoomInfo ----------------
-def create_room_info(db: Session, room_info: RoomInfoCreate):
-    db_room_info = RoomInfo(**room_info.dict())
-    db.add(db_room_info)
+def create_room_info(db: Session, data: RoomInfoCreate):
+    db_obj = RoomInfo(**data.dict())
+    db.add(db_obj)
     db.commit()
-    db.refresh(db_room_info)
-    return db_room_info
+    db.refresh(db_obj)
+    return db_obj
+
+def get_room_info(db: Session, id: int):
+    return db.query(RoomInfo).filter(RoomInfo.id == id).first()
+
+def get_all_room_info(db: Session):
+    return db.query(RoomInfo).all()
+
+def update_room_info(db: Session, id: int, data: RoomInfoUpdate):
+    db_obj = db.query(RoomInfo).filter(RoomInfo.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="RoomInfo not found")
+    for key, value in data.dict().items():
+        setattr(db_obj, key, value)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def delete_room_info(db: Session, id: int):
+    db_obj = db.query(RoomInfo).filter(RoomInfo.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="RoomInfo not found")
+    db.delete(db_obj)
+    db.commit()
+    return {"detail": "RoomInfo deleted"}
 
 
 # ---------------- RoomPreparation ----------------
-def create_room_preparation(db: Session, room_preparation: RoomPreparationCreate):
-    db_room_preparation = RoomPreparation(**room_preparation.dict())
-    db.add(db_room_preparation)
+def create_room_preparation(db: Session, data: RoomPreparationCreate):
+    db_obj = RoomPreparation(**data.dict())
+    db.add(db_obj)
     db.commit()
-    db.refresh(db_room_preparation)
-    return db_room_preparation
+    db.refresh(db_obj)
+    return db_obj
 
-
-# ---------------- RAN ----------------
-def create_ran(db: Session, ran: RANCreate):
-    db_ran = RAN(**ran.dict())
-    db.add(db_ran)
-    db.commit()
-    db.refresh(db_ran)
-    return db_ran
-
-
-# ---------------- TransmissionMW ----------------
-def create_transmission_mw(db: Session, transmission_mw: TransmissionMWCreate):
-    mw_data = transmission_mw.dict(exclude={"mw_links"})
-    db_transmission_mw = TransmissionMW(**mw_data)
-    db.add(db_transmission_mw)
-    db.commit()
-    db.refresh(db_transmission_mw)
-
-    # Handle MWLink creation
-    for link in transmission_mw.mw_links:
-        db_link = MWLink(**link.dict(), transmission_mw_id=db_transmission_mw.id)
-        db.add(db_link)
-
-    db.commit()
-    db.refresh(db_transmission_mw)
-    return db_transmission_mw
-
-
-def get_all_transmission_mw(db: Session):
-    return db.query(TransmissionMW).all()
-
-
-# ---------------- MWLink ----------------
-def create_mw_link(db: Session, mw_link: MWLinkCreate, transmission_mw_id: int):
-    db_mw_link = MWLink(**mw_link.dict(), transmission_mw_id=transmission_mw_id)
-    db.add(db_mw_link)
-    db.commit()
-    db.refresh(db_mw_link)
-    return db_mw_link
-
-
-def get_mw_links_by_transmission_id(db: Session, transmission_mw_id: int):
-    return db.query(MWLink).filter(MWLink.transmission_mw_id == transmission_mw_id).all()
-
-
-# ---------------- Getters for All ----------------
-def get_all_room_info(db: Session):
-    return db.query(RoomInfo).all()
+def get_room_preparation(db: Session, id: int):
+    return db.query(RoomPreparation).filter(RoomPreparation.id == id).first()
 
 def get_all_room_preparations(db: Session):
     return db.query(RoomPreparation).all()
 
+def update_room_preparation(db: Session, id: int, data: RoomPreparationUpdate):
+    db_obj = db.query(RoomPreparation).filter(RoomPreparation.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="RoomPreparation not found")
+    for key, value in data.dict().items():
+        setattr(db_obj, key, value)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def delete_room_preparation(db: Session, id: int):
+    db_obj = db.query(RoomPreparation).filter(RoomPreparation.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="RoomPreparation not found")
+    db.delete(db_obj)
+    db.commit()
+    return {"detail": "RoomPreparation deleted"}
+
+
+# ---------------- RAN ----------------
+def create_ran(db: Session, data: RANCreate):
+    db_obj = RAN(**data.dict())
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def get_ran(db: Session, id: int):
+    return db.query(RAN).filter(RAN.id == id).first()
+
 def get_all_ran(db: Session):
     return db.query(RAN).all()
 
-# --------- Transmission MW ---------
-def update_transmission_mw(db: Session, id: int, transmission_data: TransmissionMWCreate):
-    db_record = db.query(TransmissionMW).filter(TransmissionMW.id == id).first()
-    if not db_record:
-        raise HTTPException(status_code=404, detail="TransmissionMW not found")
-    for key, value in transmission_data.dict().items():
-        setattr(db_record, key, value)
+def update_ran(db: Session, id: int, data: RANUpdate):
+    db_obj = db.query(RAN).filter(RAN.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="RAN not found")
+    for key, value in data.dict().items():
+        setattr(db_obj, key, value)
     db.commit()
-    db.refresh(db_record)
-    return db_record
+    db.refresh(db_obj)
+    return db_obj
+
+def delete_ran(db: Session, id: int):
+    db_obj = db.query(RAN).filter(RAN.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="RAN not found")
+    db.delete(db_obj)
+    db.commit()
+    return {"detail": "RAN deleted"}
+
+
+# ---------------- Transmission MW ----------------
+def create_transmission_mw(db: Session, data: TransmissionMWCreate):
+    mw_data = data.dict(exclude={"mw_links"})
+    db_obj = TransmissionMW(**mw_data)
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+
+    for link in data.mw_links:
+        db_link = MWLink(**link.dict(), transmission_mw_id=db_obj.id)
+        db.add(db_link)
+
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def get_transmission_mw(db: Session, id: int):
+    return db.query(TransmissionMW).filter(TransmissionMW.id == id).first()
+
+def get_all_transmission_mw(db: Session):
+    return db.query(TransmissionMW).all()
+
+def update_transmission_mw(db: Session, id: int, data: TransmissionMWUpdate):
+    db_obj = db.query(TransmissionMW).filter(TransmissionMW.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="TransmissionMW not found")
+    for key, value in data.dict().items():
+        setattr(db_obj, key, value)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
 
 def delete_transmission_mw(db: Session, id: int):
-    db_record = db.query(TransmissionMW).filter(TransmissionMW.id == id).first()
-    if not db_record:
+    db_obj = db.query(TransmissionMW).filter(TransmissionMW.id == id).first()
+    if not db_obj:
         raise HTTPException(status_code=404, detail="TransmissionMW not found")
-    db.delete(db_record)
+    db.delete(db_obj)
     db.commit()
     return {"detail": "TransmissionMW deleted"}
 
 
-# --------- MW Link ---------
-def update_mw_link(db: Session, id: int, mw_link_data: MWLinkUpdate):
-    db_link = db.query(MWLink).filter(MWLink.id == id).first()
-    if not db_link:
-        raise HTTPException(status_code=404, detail="MWLink not found")
-    for key, value in mw_link_data.dict().items():
-        setattr(db_link, key, value)
+# ---------------- MW Link ----------------
+def create_mw_link(db: Session, data: MWLinkCreate, transmission_mw_id: int):
+    db_obj = MWLink(**data.dict(), transmission_mw_id=transmission_mw_id)
+    db.add(db_obj)
     db.commit()
-    db.refresh(db_link)
-    return db_link
+    db.refresh(db_obj)
+    return db_obj
+
+def get_mw_link(db: Session, id: int):
+    return db.query(MWLink).filter(MWLink.id == id).first()
+
+def get_mw_links_by_transmission_id(db: Session, transmission_mw_id: int):
+    """
+    Get all MWLink records for a given TransmissionMW ID.
+    """
+    return db.query(MWLink).filter(MWLink.transmission_mw_id == transmission_mw_id).all()
+
+def update_mw_link(db: Session, id: int, data: MWLinkUpdate):
+    db_obj = db.query(MWLink).filter(MWLink.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="MWLink not found")
+    for key, value in data.dict().items():
+        setattr(db_obj, key, value)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
 
 def delete_mw_link(db: Session, id: int):
-    db_link = db.query(MWLink).filter(MWLink.id == id).first()
-    if not db_link:
+    db_obj = db.query(MWLink).filter(MWLink.id == id).first()
+    if not db_obj:
         raise HTTPException(status_code=404, detail="MWLink not found")
-    db.delete(db_link)
+    db.delete(db_obj)
     db.commit()
     return {"detail": "MWLink deleted"}
 
+
 # ---------------- DC Power System ----------------
-def create_dc_power_system(db: Session, data: DCPowerSystemCreate):
-    dc = DCPowerSystem(
-        site_session_id=data.site_session_id,
-        existing_dc_equipment_vendor=data.existing_dc_equipment_vendor,
-        existing_dc_power_rack=data.existing_dc_power_rack,
-        existing_rectifier_modules=data.existing_rectifier_modules,
-        rectifier_module_model=data.rectifier_module_model,
-        rectifier_module_capacity=data.rectifier_module_capacity,
-        free_slots_new_rectifier=data.free_slots_new_rectifier,
-        is_blvd_available=data.is_blvd_available,
-        blvd_has_free_cbs=data.blvd_has_free_cbs,
-        is_llvd_available=data.is_llvd_available,
-        llvd_has_free_cbs=data.llvd_has_free_cbs,
-        is_pdu_available=data.is_pdu_available,
-        pdu_has_free_cbs=data.pdu_has_free_cbs,
-        battery_strings=data.battery_strings,
-        battery_type=data.battery_type,
-        battery_vendor=data.battery_vendor,
-        total_battery_capacity=data.total_battery_capacity,
-    )
+def create_dc_power_system(db: Session, data: DCSystemCreate):
+    dc = DCPowerSystem(**data.dict(exclude={"blvd_cb_loads", "llvd_cb_loads", "pdu_cb_loads"}))
     db.add(dc)
     db.commit()
     db.refresh(dc)
 
     for cb in data.blvd_cb_loads:
-        db.add(BLVDCBLoad(dc_power_system_id=dc.id, label=cb.label, capacity=cb.capacity))
-
+        db.add(BLVDCBLoad(dc_power_system_id=dc.id, **cb.dict()))
     for cb in data.llvd_cb_loads:
-        db.add(LLVDCBLoad(dc_power_system_id=dc.id, label=cb.label, capacity=cb.capacity))
-
+        db.add(LLVDCBLoad(dc_power_system_id=dc.id, **cb.dict()))
     for cb in data.pdu_cb_loads:
-        db.add(PDUCBLoad(dc_power_system_id=dc.id, label=cb.label, capacity=cb.capacity))
+        db.add(PDUCBLoad(dc_power_system_id=dc.id, **cb.dict()))
 
     db.commit()
     return dc
+
+def create_blvd_cb_load(db: Session, data: BLVDCBLoadCreate):
+    db_obj = BLVDCBLoad(**data.dict())
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def get_blvd_cb_loads_by_dc_id(db: Session, dc_power_system_id: int):
+    """
+    Get all BLVDCBLoad records for a given DC Power System ID.
+    """
+    return db.query(BLVDCBLoad).filter(BLVDCBLoad.dc_power_system_id == dc_power_system_id).all()
+
+def update_blvd_cb_load(db: Session, id: int, data: BLVDCBLoadCreate):
+    db_obj = db.query(BLVDCBLoad).filter(BLVDCBLoad.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="BLVDCBLoad not found")
+    for key, value in data.dict().items():
+        setattr(db_obj, key, value)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def delete_blvd_cb_load(db: Session, id: int):
+    db_obj = db.query(BLVDCBLoad).filter(BLVDCBLoad.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="BLVDCBLoad not found")
+    db.delete(db_obj)
+    db.commit()
+    return {"detail": "BLVDCBLoad deleted"}
+
+def create_llvd_cb_load(db: Session, data: LLVDCBLoadCreate):
+    db_obj = LLVDCBLoad(**data.dict())
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def get_llvd_cb_loads_by_dc_id(db: Session, dc_power_system_id: int):
+    """
+    Get all LLVDCBLoad records for a given DC Power System ID.
+    """
+    return db.query(LLVDCBLoad).filter(LLVDCBLoad.dc_power_system_id == dc_power_system_id).all()
+
+def update_llvd_cb_load(db: Session, id: int, data: LLVDCBLoadCreate):
+    db_obj = db.query(LLVDCBLoad).filter(LLVDCBLoad.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="LLVDCBLoad not found")
+    for key, value in data.dict().items():
+        setattr(db_obj, key, value)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def delete_llvd_cb_load(db: Session, id: int):
+    db_obj = db.query(LLVDCBLoad).filter(LLVDCBLoad.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="LLVDCBLoad not found")
+    db.delete(db_obj)
+    db.commit()
+    return {"detail": "LLVDCBLoad deleted"}
+
+def create_pdu_cb_load(db: Session, data: PDUCBLoadCreate):
+    db_obj = PDUCBLoad(**data.dict())
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def get_pdu_cb_loads_by_dc_id(db: Session, dc_power_system_id: int):
+    """
+    Get all PDUCBLoad records for a given DC Power System ID.
+    """
+    return db.query(PDUCBLoad).filter(PDUCBLoad.dc_system_id == dc_power_system_id).all()
+
+def update_pdu_cb_load(db: Session, id: int, data: PDUCBLoadCreate):
+    db_obj = db.query(PDUCBLoad).filter(PDUCBLoad.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="PDUCBLoad not found")
+    for key, value in data.dict().items():
+        setattr(db_obj, key, value)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def delete_pdu_cb_load(db: Session, id: int):
+    db_obj = db.query(PDUCBLoad).filter(PDUCBLoad.id == id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="PDUCBLoad not found")
+    db.delete(db_obj)
+    db.commit()
+    return {"detail": "PDUCBLoad deleted"}

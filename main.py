@@ -9,7 +9,7 @@ from routers import (
     user, project, role, site_location, survey_visit, site_information, site_access, site_session,
     ac_connection_info, power_meter, ac_panel, ac_panel_cb_load, room
 )
-
+from routers import new_radio
 # Initialize FastAPI
 app = FastAPI(
     title="Site Survey Backend",
@@ -62,3 +62,4 @@ app.include_router(ac_panel_cb_load.router, prefix="/ac-panel-cb-load", tags=["A
 app.include_router(room.router)
 
 app.include_router(health_safety.router)
+app.include_router(new_radio.router)
