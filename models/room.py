@@ -7,6 +7,7 @@ class RoomInfo(Base):
     __tablename__ = "room_info"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    site_session_id = Column(Integer, ForeignKey('site_session.id'))    
     height = Column(Float, nullable=False)
     width = Column(Float, nullable=False)
     depth = Column(Float, nullable=False)
@@ -19,6 +20,7 @@ class RoomPreparation(Base):
     __tablename__ = "room_preparation"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    site_session_id = Column(Integer, ForeignKey('site_session.id'))    
     air_condition_type = Column(String(255), nullable=False)
     air_condition_count = Column(String(255), nullable=False)
     air_condition_capacity = Column(Float, nullable=False)
@@ -38,6 +40,7 @@ class RAN(Base):
     __tablename__ = "ran"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    site_session_id = Column(Integer, ForeignKey('site_session.id'))
     equipment_vendor = Column(String(255), nullable=False)
     has_free_slots = Column(Boolean, nullable=False)
     rack_type_with_free_slots = Column(String(255), nullable=False)
@@ -50,6 +53,7 @@ class TransmissionMW(Base):
     __tablename__ = "transmission_mw"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    site_session_id = Column(Integer, ForeignKey('site_session.id'))
     type_of_transmission = Column(String(255), nullable=False)  # Fiber / MW / Not exist
     transmission_equipment_vendor = Column(String(255), nullable=False)  # comma-separated: Nokia, Huawei, etc.
     cable_length_from_odf_to_baseband = Column(Float, nullable=False)

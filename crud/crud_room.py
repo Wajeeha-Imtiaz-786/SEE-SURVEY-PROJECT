@@ -119,13 +119,12 @@ def create_transmission_mw(db: Session, data: TransmissionMWCreate):
     db.add(db_obj)
     db.commit()
     db.refresh(db_obj)
-
-    for link in data.mw_links:
-        db_link = MWLink(**link.dict(), transmission_mw_id=db_obj.id)
-        db.add(db_link)
-
-    db.commit()
-    db.refresh(db_obj)
+    # Now add MWLink records if provided
+    if data.mw_links:
+        for link in data.mw_links:
+            db_link = MWLink(**link.dict(), transmission_mw_id=db_obj.id)
+            db.add(db_link)
+        db.commit()
     return db_obj
 
 def get_transmission_mw(db: Session, id: int):
