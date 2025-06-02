@@ -23,7 +23,7 @@ from schemas.room import (
     RANCreate, RANOut,
     TransmissionMWCreate, TransmissionMWOut,
     MWLinkOut, MWLinkUpdate,
-    DCSystemCreate as DCPowerSystemCreate, DCSystem as DCPowerSystemOut,
+    DCPowerSystemCreate, DCPowerSystem as DCPowerSystemOut,
     BLVDCBLoadCreate, BLVDCBLoadOut,
     LLVDCBLoadCreate, LLVDCBLoadOut,
     PDUCBLoadCreate, PDUCBLoadOut

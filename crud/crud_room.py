@@ -9,7 +9,7 @@ from schemas.room import (
     RoomPreparationCreate, RoomPreparationUpdate,
     RANCreate, RANUpdate,
     TransmissionMWCreate, TransmissionMWUpdate, MWLinkCreate, MWLinkUpdate,
-    DCSystemCreate, BLVDCBLoadCreate, LLVDCBLoadCreate, PDUCBLoadCreate
+    DCPowerSystemCreate, BLVDCBLoadCreate, LLVDCBLoadCreate, PDUCBLoadCreate
 )
 
 
@@ -189,7 +189,7 @@ def delete_mw_link(db: Session, id: int):
 
 
 # ---------------- DC Power System ----------------
-def create_dc_power_system(db: Session, data: DCSystemCreate):
+def create_dc_power_system(db: Session, data: DCPowerSystemCreate):
     dc = DCPowerSystem(**data.dict(exclude={"blvd_cb_loads", "llvd_cb_loads", "pdu_cb_loads"}))
     db.add(dc)
     db.commit()
